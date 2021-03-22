@@ -2,7 +2,8 @@ from prelude import *
 
 with open(STOP_WORDS_PATH, 'r', encoding='utf-8') as f:
     stop_words = [i.strip() for i in f.readlines()]
-stop_words.extend(['rt', ':', '?', ',', '.', "c'est"])
+stop_words.extend(['rt', ':', '?', ',', '.', '!',
+                   '-', '_', '/', "c’est", "c'est", "j’ai", "j'ai"])
 
 date_time_begin_str = 'Sat Feb 1 20:00:00 +0000 2020'
 date_time_end_str = 'Sun Feb 2 20:00:00 +0000 2020'
