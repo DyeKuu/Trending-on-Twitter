@@ -1,0 +1,68 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[titlepage, fancysections, pagenumber]{polytechnique}
+\usepackage[utf8]{inputenc}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{array}
+\usepackage{geometry}
+\usepackage{indentfirst}
+\usepackage{float}
+\usepackage{listings}
+\setlength{\parindent}{2em}
+\usepackage{hyperref}
+\usepackage{subfig}
+\usepackage{emoji}
+\setemojifont{Twemoji Mozilla}
+\definecolor{Mycolor2}{rgb}{0.36, 0.54, 0.66}
+\hypersetup{}
+
+
+\lstset{frame=tb,
+  language=python,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\usepackage[backend=biber]{biblatex}
+\addbibresource{references.bib}
+
+\title{Trending on tweet}
+\subtitle{INF-583 Project}
+\author{Kunhao \textsc{ZHENG}, Yujia \textsc{FU}}
+\date{March 2021}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\newpage
+\section{Introduction}
+\input{introduction}
+
+
+\section{Trending detection}
+\input{project}
+
+
+
+\pagebreak
+
+\printbibliography[
+heading=bibintoc,
+title={References}
+]
+
+\pagebreak
+
+\end{document}

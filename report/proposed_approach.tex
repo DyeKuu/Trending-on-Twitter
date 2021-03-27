@@ -1,0 +1,51 @@
+We have considered 3 basic models : Support Vector Machine (SVM), Gradient Boosting Regressor(GBR) and Random Forest Regressor(RF). We then proposed 4 enhanced models: RF after logarithmization, GBR after logarithmization, SVM-enhanced RF and RF-enhanced SVM. We firstly proprocess our training input by normalizing some features because the scales of features are different. The criterion is that the columns with a big scale (such as $user\_followers\_count$) will be normalized. See Table 1 for more details. The parameters can be redefined or determined with grid search and cross-validation. Also, we use cross-validation to prevent overfitting. We note $\textbf{X}$ the normalized feature set and $\textbf{y}$ the set of targeted feature values.
+
+\subsection*{Basic models}
+
+$\bullet$ \textbf{Support Vector Machine(SVM)}:
+
+The use of SVMs in regression is known as Support Vector Regression (SVR). The fit time complexity of SVR is more than quadratic with the number of samples which makes it hard to scale to datasets with more than a couple of 10000 samples. To solve this problem, we choose SVR with parameter kernel=’linear’ instead of 'rbf' or 'ploy'.
+
+However, this method has certain limitations. The Linear kernel is given by the inner product  \textless x,y\textgreater plus an optional constant c. Kernel algorithms using a linear kernel are often equivalent to their non-kernel counterparts. As a result, it works fine if target $\textbf{y}$ is linearly related to features. The MAE of cross validation for this method is 146.14.
+
+\
+
+$\bullet$ \textbf{Random Forest Regressor}:
+
+Random forest Regressing constructs a multitude of decision trees at training time and outputs mean prediction of all individual trees. The MAE of cross validation for this method is 227.82. This may be because that target value $\textbf{y}$ is too sparse.
+
+\
+
+$\bullet$ \textbf{Gradient Boosting Regressor(GBR)}:
+
+Gradient Tree Boosting  produces a prediction model in the form of an ensemble of decision trees by using weighted averages in a stage-wise fashion.
+The MAE of cross validation for this method is 230.99. This may also be because that target value $\textbf{y}$ is too sparse.
+
+
+\subsection*{Enhanced models}
+
+$\bullet$ \textbf{RF after logarithmization}\label{model:rf}: since we have normalized some columns of feature sets, their scales are small. But the target, number of retweet has a big scale (from 0 to hundreds of thousands). We suppose that is has a negative impact on the result. We would like to decrease the scale of target by logarithmization. For a given number of retweet $y_i$ in the training set $\textbf{y}_{train}$, we note $y_i^{'} = log(y_i+1)$. The new training set of target becomes: $\textbf{y}_{train}^{'} = \{ y_1^{'}, \cdots, y_n^{'} \}$ where $n$ is its size. And we perform random forest on $(\textbf{X}_{train},\textbf{y}_{train}^{'})$ which have both small scale.
+
+\
+
+$\bullet$ \textbf{GBR after logarithmization}: to contrast, we proposed a GBR model after logarithmization, with the same idea as RF after logarithmization, to study if smaller scale of target feature would improve the MAE.
+
+\
+
+$\bullet$ \textbf{SVM-enhanced RF} : inspired by previous research\cite{Piao}, we would like to enhance the best basic model (according to the testing results, see table 2) SVM with random forest. Firstly, we train a SVM model $S(\textbf{X}_{train})$ on using $(\textbf{X}_{train},\textbf{y}_{train}^{'})$. Let $\epsilon = \textbf{y}_{train}^{'} - S(\textbf{X}_{train})$ the residual. We then create a new training dataset $C=\{(x_i,\epsilon_i)|x_i \in \textbf{X}_{train}\}$. Secondly, we train a random forest $R$ on $C$. Finally, given the trained model $S$ and $R$, the prediction $\hat{\textbf{y}}$ for the input $\hat{\textbf{X}}$ is $\hat{\textbf{y}} = exp(S(\hat{\textbf{X}})+R(\hat{\textbf{X}}))-1$.
+
+\
+
+$\bullet$ \textbf{RF-enhanced SVM}: by comparison, we proposed a RF-enhanced SVM whose principle is similar to SVM-enhanced RF. We firstly train a random forest, and then train a SVM using the residual.
+
+
+
+
+
+\subsection*{Model Comparison}
+
+From Table 2, we can see that RF after logarithmization performs the best score on test with cross validation and submission. Compared with RF without logarithmization, its MAE reduced 39.94\% which proves that the scale of target feature has an impact on prediction accuracy. And the contrast between GBR with and without logarithmization also proves that smaller target scale will get better MAE.
+
+Also, the results of SVM-enhanced RF are at the same level as RF after logarithmization. However, during testing, the first part of model, SVM, does not predict well $\textbf{y}^{'}_{test}$ with MAE$>300$, which shows that RF plays an important role in the combination model. What's more, SVM-enhanced RF perform as well as RF-enhanced SVM. However, RF-enhanced SVM degrades a little MAE, compared with RF after logarithmization, which shows that adding SVM could not improve the results. 
+
+In this challenge, the good performance of RF (after logarithmization) could also be found in a related problem which is predicting if a tweet will be retweeted or not\cite{rf_best}.
